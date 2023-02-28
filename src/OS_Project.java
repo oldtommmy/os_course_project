@@ -3,6 +3,8 @@
  */
 public class OS_Project {
     public static void main(String[] args) {
-        RRBasedOnPriority.doRR();
+
+        //RRBasedOnPriority.doRR(); 时间片轮转
+        MSFQSBasedOnTimeSlice.doMSFQ(); //多级优先队列
     }
 }

@@ -23,6 +23,12 @@ public class PBT {
         this.status = status;
     }
 
+    public PBT(String name, double arriveTime, double serviceTime) {
+        this.name = name;
+        this.arriveTime = arriveTime;
+        this.serviceTime = serviceTime;
+    }
+
     public String getName() {
         return name;
     }
