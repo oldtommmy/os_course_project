@@ -11,6 +11,10 @@ public class PBT {
 
     private double serviceTime;
 
+    private double turnTime;
+
+    private double finishedTime;
+
     private int priority;
 
     private char status;
@@ -27,6 +31,30 @@ public class PBT {
         this.name = name;
         this.arriveTime = arriveTime;
         this.serviceTime = serviceTime;
+    }
+
+    public PBT(String name, double arriveTime, double serviceTime, double turnTime, double finishedTime) {
+        this.name = name;
+        this.arriveTime = arriveTime;
+        this.serviceTime = serviceTime;
+        this.turnTime = turnTime;
+        this.finishedTime = finishedTime;
+    }
+
+    public double getTurnTime() {
+        return turnTime;
+    }
+
+    public void setTurnTime(double turnTime) {
+        this.turnTime = turnTime;
+    }
+
+    public double getFinishedTime() {
+        return finishedTime;
+    }
+
+    public void setFinishedTime(double finishedTime) {
+        this.finishedTime = finishedTime;
     }
 
     public String getName() {
