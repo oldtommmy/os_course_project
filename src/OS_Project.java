@@ -7,6 +7,7 @@ public class OS_Project {
         //RRBasedOnPriority.doRR(); 时间片轮转
         //MSFQSBasedOnTimeSlice.doMSFQ(); //多级优先队列
         //FCFS.doFCFS();
-        SJF.doSJF();
+//        SJF.doSJF();
+        HRRN.doHRN();
     }
 }

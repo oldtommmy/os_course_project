@@ -15,6 +15,8 @@ public class PBT {
 
     private double finishedTime;
 
+    private double waitingTime;
+
     private int priority;
 
     private char status;
@@ -39,6 +41,14 @@ public class PBT {
         this.serviceTime = serviceTime;
         this.turnTime = turnTime;
         this.finishedTime = finishedTime;
+    }
+
+    public double getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setWaitingTime(double waitingTime) {
+        this.waitingTime = waitingTime;
     }
 
     public double getTurnTime() {
