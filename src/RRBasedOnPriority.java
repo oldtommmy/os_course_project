@@ -48,7 +48,7 @@ public class RRBasedOnPriority {
 
         while (!waitingQueue.isEmpty()) {
             System.out.println("================================Ready Queue======================================");
-            System.out.println("Process ID\t\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+            System.out.println("Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
             int maxPriority = Integer.MAX_VALUE;
             PBT target = null;
             boolean isReady = false;
@@ -59,8 +59,8 @@ public class RRBasedOnPriority {
                 PBT pbt = waitingQueue.get(i);
                 if (currentTime >= pbt.getArriveTime()) {
                     isReady = true;
-                    System.out.println("\t\t"+pbt.getName()+"\t\t"+pbt.getPriority()+"\t\t\t"+
-                            pbt.getArriveTime()+"\t\t\t\t"+pbt.getServiceTime()+"\t\t\t\t"+pbt.getRunningTime()+"\t\t\t"+
+                    System.out.println(pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                            pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                             "Ready");
                     if (pbt.getPriority() < maxPriority) {
                         maxPriority = pbt.getPriority();
@@ -86,11 +86,11 @@ public class RRBasedOnPriority {
             }
 
             System.out.println("===============================Finished Queue=================================");
-            System.out.println("Process ID\t\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+            System.out.println("Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
             for (int i = 0; i < finishedQueue.size(); i++) {
                 PBT pbt = finishedQueue.get(i);
-                System.out.println("\t\t"+pbt.getName()+"\t\t"+pbt.getPriority()+"\t\t\t"+
-                        pbt.getArriveTime()+"\t\t\t\t"+pbt.getServiceTime()+"\t\t\t\t"+pbt.getRunningTime()+"\t\t\t"+
+                System.out.println(pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                        pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                         "finished");
             }
 
