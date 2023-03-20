@@ -14,25 +14,34 @@ public class MSFQSBasedOnTimeSlice {
     private static int processNum;     //进程数量
     private static Scanner sc = new Scanner(System.in);
 
-    public static void init() {
-        System.out.println("=================MSFQ 多级队列反馈调度模拟===============");
-        System.out.println("队列数为3，按队列优先级从高到低的顺序输入各个队列的时间片长度：");
-        firstTime = sc.nextInt();
-        secondTime = sc.nextInt();
-        thirdTime = sc.nextInt();
-        System.out.println( "请输入进程数:" );
-        processNum = sc.nextInt();
+    public MSFQGUI gui;
 
-        System.out.println("请依次输入进程标识符,进程到达时间,进程运行时间:" );
-        for (int i = 0; i < processNum; i++) {
-            pbts.add(new PBT(sc.next(), sc.nextDouble(), sc.nextDouble()));
-        }
+    private String temp = "";
+
+    public void init(int f,int s,int t,int number,LinkedList<PBT> inputs) {
+//        System.out.println("=================MSFQ 多级队列反馈调度模拟===============");
+//        System.out.println("队列数为3，按队列优先级从高到低的顺序输入各个队列的时间片长度：");
+//        firstTime = sc.nextInt();
+//        secondTime = sc.nextInt();
+//        thirdTime = sc.nextInt();
+//        System.out.println( "请输入进程数:" );
+//        processNum = sc.nextInt();
+//
+//        System.out.println("请依次输入进程标识符,进程到达时间,进程运行时间:" );
+//        for (int i = 0; i < processNum; i++) {
+//            pbts.add(new PBT(sc.next(), sc.nextDouble(), sc.nextDouble()));
+//        }
+        firstTime = f;
+        secondTime = s;
+        thirdTime = t;
+        processNum = number;
+        pbts = inputs;
         pbts.sort(Comparator.comparingDouble(PBT::getArriveTime));
     }
 
-    public static void doMSFQ() {
+    public void doMSFQ() {
 
-        init();
+        //init();
 
         int firstCpu = firstTime;
         int secondCpu = secondTime;
@@ -79,7 +88,7 @@ public class MSFQSBasedOnTimeSlice {
                 //进程运行完毕，状态：F，记录完成时刻并出队
                 if(peek.getRunningTime() == peek.getServiceTime()){
                     peek.setStatus('F');
-                    System.out.println("current time:" + currentTime + "\t" +peek.getName() +" finished");
+                    temp = connectString(temp,"current time:" + currentTime + "\t" +peek.getName() +" finished");
                     Objects.requireNonNull(firstQueue.poll());
                     firstTime = firstCpu;
                 }
@@ -110,7 +119,7 @@ public class MSFQSBasedOnTimeSlice {
                 //进程运行完毕，状态：F，记录完成时刻并出队
                 if(peek.getRunningTime() == peek.getServiceTime()){
                     peek.setStatus('F');
-                    System.out.println("current time:" + currentTime + "\t" +peek.getName() +" finished");
+                    temp = connectString(temp,"current time:" + currentTime + "\t" +peek.getName() +" finished");
                     Objects.requireNonNull(secondQueue.poll());
                     secondTime = secondCpu;
                 }
@@ -135,42 +144,49 @@ public class MSFQSBasedOnTimeSlice {
                 } else {
                     firstTime = firstCpu;
                     peek.setStatus('F');
-                    System.out.println("current time:" + currentTime + "\t" +peek.getName() +" finished");
+                    temp = connectString(temp,"current time:" + currentTime + "\t" +peek.getName() +" finished");
                     Objects.requireNonNull(thirdQueue.poll());
                 }
             }
+            gui.submitResult(temp);
+            temp = "";
+
         }
     }
 
-    public static void showQueue() {
-        System.out.println("================================Current time: "+currentTime+ "================================");
-        System.out.println("================================First Queue======================================");
-        System.out.println("Process ID\t\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+    public void showQueue() {
+        temp = connectString(temp,"================================Current time: "+currentTime+ "================================");
+        temp = connectString(temp,"================================First Queue======================================");
+        temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
         for (PBT pbt : firstQueue) {
-            System.out.println("\t\t"+pbt.getName()+"\t\t"+pbt.getPriority()+"\t\t\t"+
-                    pbt.getArriveTime()+"\t\t\t\t"+pbt.getServiceTime()+"\t\t\t\t"+pbt.getRunningTime()+"\t\t\t"+
+            temp = connectString(temp, pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                    pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                     (pbt.getStatus() == 'R' ? "Ready" : "Running"));
         }
 
-        System.out.println("================================Second Queue======================================");
-        System.out.println("Process ID\t\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+        temp = connectString(temp,"================================Second Queue======================================");
+        temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
         for (PBT pbt : secondQueue) {
-            System.out.println("\t\t"+pbt.getName()+"\t\t"+pbt.getPriority()+"\t\t\t"+
-                    pbt.getArriveTime()+"\t\t\t\t"+pbt.getServiceTime()+"\t\t\t\t"+pbt.getRunningTime()+"\t\t\t"+
+            temp = connectString(temp,pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                    pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                     (pbt.getStatus() == 'R' ? "Ready" : "Running"));
         }
 
-        System.out.println("================================Third Queue======================================");
-        System.out.println("Process ID\t\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+        temp = connectString(temp,"================================Third Queue======================================");
+        temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
         for (PBT pbt : thirdQueue) {
-            System.out.println("\t\t"+pbt.getName()+"\t\t"+pbt.getPriority()+"\t\t\t"+
-                    pbt.getArriveTime()+"\t\t\t\t"+pbt.getServiceTime()+"\t\t\t\t"+pbt.getRunningTime()+"\t\t\t"+
+            temp = connectString(temp,pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                    pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                     (pbt.getStatus() == 'R' ? "Ready" : "Running"));
         }
-        System.out.println("\n");
+        temp = connectString(temp,"\n");
 
     }
 
+
+    private  String connectString(String f,String s){
+        return f+s+"\n";
+    }
 
 
 }

@@ -6,11 +6,12 @@
  */
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class HRRN {
 
-    private static ArrayList<PBT> pbts = new ArrayList<>();
+    private static LinkedList<PBT> pbts = new LinkedList<>();
 
     private static double avgTotalTurnTime;
 
@@ -18,33 +19,37 @@ public class HRRN {
 
     private static Scanner sc = new Scanner(System.in);
 
-    public static void init() {
-        System.out.println("=================HRRN 高响应比优先算法===============");
-        System.out.println("请输入作业数:");
-        processNum = sc.nextInt();
+    public HRRNGUI gui;
 
-        System.out.println("请依次输入作业标识符,作业到达时间,作业运行时间:" );
-        for (int i = 0; i < processNum; i++) {
-            pbts.add(new PBT(sc.next(), sc.nextDouble(), sc.nextDouble(), 0, 0));
-        }
+    public static void init(int number,LinkedList<PBT> inputQueue) {
+//        System.out.println("=================HRRN 高响应比优先算法===============");
+//        System.out.println("请输入作业数:");
+//        processNum = sc.nextInt();
+//
+//        System.out.println("请依次输入作业标识符,作业到达时间,作业运行时间:" );
+//        for (int i = 0; i < processNum; i++) {
+//            pbts.add(new PBT(sc.next(), sc.nextDouble(), sc.nextDouble(), 0, 0));
+//        }
+        processNum = number;
+        pbts = inputQueue;
         pbts.sort(Comparator.comparingDouble(PBT::getArriveTime));
         avgTotalTurnTime = 0;
     }
 
-    public static void show() {
-        System.out.println("================================SJF======================================");
-        System.out.println("Work ID\t\t\tArrival Time\t\tFinished Time\t\tTurn Time");
+    public void show() {
+        gui.showOnUI("================================HRRN======================================");
+        gui.showOnUI("Work ID\t\t\tArrival Time\t\tFinished Time\t\tTurn Time");
         for (PBT pbt : pbts) {
             avgTotalTurnTime += pbt.getTurnTime();
-            System.out.println("\t"+pbt.getName()+"\t\t\t"+pbt.getArriveTime()+"\t\t\t\t\t"+
+            gui.showOnUI("\t"+pbt.getName()+"\t\t\t"+pbt.getArriveTime()+"\t\t\t\t\t"+
                     pbt.getFinishedTime()+"\t\t\t\t"+pbt.getTurnTime());
         }
         avgTotalTurnTime /= processNum;
-        System.out.println("=============================Avg TurnTime:" + avgTotalTurnTime + "===========================");
+        gui.showOnUI("=============================Avg TurnTime:" + avgTotalTurnTime + "===========================");
     }
 
-    public static void doHRN() {
-        init();
+    public void doHRN() {
+        //init();
         // 根据响应比排序
         pbts.sort((p1, p2) -> {
             double r1 = (p1.getWaitingTime() + p1.getServiceTime()) / p1.getServiceTime();

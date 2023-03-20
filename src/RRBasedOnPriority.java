@@ -10,48 +10,54 @@ public class RRBasedOnPriority {
     private final Scanner scanner = new Scanner(System.in);
     private LinkedList<PBT> waitingQueue = new LinkedList<>();
     private LinkedList<PBT> finishedQueue = new LinkedList<>();
+    int timeSlice;
+    public TimeGUI gui;
 
     /**
      * 初始化
      */
-    public void init() {
-        System.out.println("输入进程数目:");
-        int num = scanner.nextInt();
-        String name;
-        double arrive;
-        double service;
-        int priority;
-        char status = 'W';
-        System.out.println("请创建进程对象 输入进程名称  到达时间  服务时间 优先数");
-        System.out.println("请输入进程的信息: ");
-        for (int i = 0; i < num; i++) {
-            name = scanner.next();
-            arrive = scanner.nextDouble();
-            service = scanner.nextDouble();
-            priority = scanner.nextInt();
-            if (arrive == 0) {
-                status = 'R';
-            }
-            waitingQueue.add(new PBT(name, arrive, service, priority, status));
-        }
+    public void init(int number,int timeSlice,LinkedList<PBT> inputQueue) {
+        //System.out.println("输入进程数目:");
+        //int num = scanner.nextInt();
+//        String name;
+//        double arrive;
+//        double service;
+//        int priority;
+//        char status = 'W';
+//        System.out.println("请创建进程对象 输入进程名称  到达时间  服务时间 优先数");
+//        System.out.println("请输入进程的信息: ");
+//        for (int i = 0; i < num; i++) {
+//            name = scanner.next();
+//            arrive = scanner.nextDouble();
+//            service = scanner.nextDouble();
+//            priority = scanner.nextInt();
+//            if (arrive == 0) {
+//                status = 'R';
+//            }
+//            waitingQueue.add(new PBT(name, arrive, service, priority, status));
+//        }
+        int num = number;
+        this.timeSlice = timeSlice;
+        waitingQueue = inputQueue;
         waitingQueue.sort(Comparator.comparingDouble(PBT::getArriveTime));
     }
 
     public void RR() {
 
-        System.out.println("请输入时间片大小:");
-        int timeSlice = scanner.nextInt();
+//        System.out.println("请输入时间片大小:");
+//        int timeSlice = scanner.nextInt();
         double currentTime = 0;
         int index = 0;
-        boolean exist = false;
+        boolean isReady = false;
 
 
         while (!waitingQueue.isEmpty()) {
-            System.out.println("================================Ready Queue======================================");
-            System.out.println("Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+            String temp = "";
+            temp = connectString(temp,"================================Ready Queue======================================");
+            temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
             int maxPriority = Integer.MAX_VALUE;
             PBT target = null;
-            boolean isReady = false;
+            isReady = false;
 
             //遍历队列
             //输出当前已到达的进程 并找到最高优先级的进程
@@ -59,7 +65,7 @@ public class RRBasedOnPriority {
                 PBT pbt = waitingQueue.get(i);
                 if (currentTime >= pbt.getArriveTime()) {
                     isReady = true;
-                    System.out.println(pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                    temp = connectString(temp,pbt.getName()+"\t"+pbt.getPriority()+"\t"+
                             pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                             "Ready");
                     if (pbt.getPriority() < maxPriority) {
@@ -71,7 +77,7 @@ public class RRBasedOnPriority {
             }
 
             if (isReady) {
-                System.out.println("Current time:"+currentTime+", Selected process:"+target.getName());
+                temp = connectString(temp,"Current time:"+currentTime+", Selected process:"+target.getName());
                 target.setRunningTime(target.getRunningTime()+timeSlice);
                 if (target.getRunningTime() > target.getServiceTime()) {
                     target.setStatus('F');
@@ -85,22 +91,27 @@ public class RRBasedOnPriority {
                 }
             }
 
-            System.out.println("===============================Finished Queue=================================");
-            System.out.println("Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
+            temp = connectString(temp,"===============================Finished Queue=================================");
+            temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
             for (int i = 0; i < finishedQueue.size(); i++) {
                 PBT pbt = finishedQueue.get(i);
-                System.out.println(pbt.getName()+"\t"+pbt.getPriority()+"\t"+
+                temp = connectString(temp, pbt.getName()+"\t"+pbt.getPriority()+"\t"+
                         pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
                         "finished");
             }
 
+            gui.submitResult(temp);
         }
+    }
+
+    private  String connectString(String f,String s){
+        return f+s+"\n";
     }
 
     public static void doRR() {
         RRBasedOnPriority rrBasedOnPriority = new RRBasedOnPriority();
-        rrBasedOnPriority.init();
-        rrBasedOnPriority.RR();
+        //rrBasedOnPriority.init();
+        //rrBasedOnPriority.RR();
     }
 
 }
