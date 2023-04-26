@@ -8,44 +8,23 @@ import java.util.Scanner;
 public class RRBasedOnPriority {
 
     private final Scanner scanner = new Scanner(System.in);
-    private LinkedList<PBT> waitingQueue = new LinkedList<>();
-    private LinkedList<PBT> finishedQueue = new LinkedList<>();
+    private LinkedList<PCB> waitingQueue = new LinkedList<>();
+    private LinkedList<PCB> finishedQueue = new LinkedList<>();
     int timeSlice;
     public TimeGUI gui;
 
     /**
      * 初始化
      */
-    public void init(int number,int timeSlice,LinkedList<PBT> inputQueue) {
-        //System.out.println("输入进程数目:");
-        //int num = scanner.nextInt();
-//        String name;
-//        double arrive;
-//        double service;
-//        int priority;
-//        char status = 'W';
-//        System.out.println("请创建进程对象 输入进程名称  到达时间  服务时间 优先数");
-//        System.out.println("请输入进程的信息: ");
-//        for (int i = 0; i < num; i++) {
-//            name = scanner.next();
-//            arrive = scanner.nextDouble();
-//            service = scanner.nextDouble();
-//            priority = scanner.nextInt();
-//            if (arrive == 0) {
-//                status = 'R';
-//            }
-//            waitingQueue.add(new PBT(name, arrive, service, priority, status));
-//        }
+    public void init(int number,int timeSlice,LinkedList<PCB> inputQueue) {
         int num = number;
         this.timeSlice = timeSlice;
         waitingQueue = inputQueue;
-        waitingQueue.sort(Comparator.comparingDouble(PBT::getArriveTime));
+        waitingQueue.sort(Comparator.comparingDouble(PCB::getArriveTime));
     }
 
     public void RR() {
 
-//        System.out.println("请输入时间片大小:");
-//        int timeSlice = scanner.nextInt();
         double currentTime = 0;
         int index = 0;
         boolean isReady = false;
@@ -56,21 +35,21 @@ public class RRBasedOnPriority {
             temp = connectString(temp,"================================Ready Queue======================================");
             temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
             int maxPriority = Integer.MAX_VALUE;
-            PBT target = null;
+            PCB target = null;
             isReady = false;
 
             //遍历队列
             //输出当前已到达的进程 并找到最高优先级的进程
             for (int i = 0; i < waitingQueue.size(); i++) {
-                PBT pbt = waitingQueue.get(i);
-                if (currentTime >= pbt.getArriveTime()) {
+                PCB PCB = waitingQueue.get(i);
+                if (currentTime >= PCB.getArriveTime()) {
                     isReady = true;
-                    temp = connectString(temp,pbt.getName()+"\t"+pbt.getPriority()+"\t"+
-                            pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
+                    temp = connectString(temp, PCB.getName()+"\t"+ PCB.getPriority()+"\t"+
+                            PCB.getArriveTime()+"\t"+ PCB.getServiceTime()+"\t"+ PCB.getRunningTime()+"\t"+
                             "Ready");
-                    if (pbt.getPriority() < maxPriority) {
-                        maxPriority = pbt.getPriority();
-                        target = pbt;
+                    if (PCB.getPriority() < maxPriority) {
+                        maxPriority = PCB.getPriority();
+                        target = PCB;
                         index = i;
                     }
                 }
@@ -94,9 +73,9 @@ public class RRBasedOnPriority {
             temp = connectString(temp,"===============================Finished Queue=================================");
             temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
             for (int i = 0; i < finishedQueue.size(); i++) {
-                PBT pbt = finishedQueue.get(i);
-                temp = connectString(temp, pbt.getName()+"\t"+pbt.getPriority()+"\t"+
-                        pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
+                PCB PCB = finishedQueue.get(i);
+                temp = connectString(temp, PCB.getName()+"\t"+ PCB.getPriority()+"\t"+
+                        PCB.getArriveTime()+"\t"+ PCB.getServiceTime()+"\t"+ PCB.getRunningTime()+"\t"+
                         "finished");
             }
 

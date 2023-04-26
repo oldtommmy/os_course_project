@@ -13,24 +13,24 @@ public class FCFS {
 
     private static int processNum;
 
-    private static LinkedList<PBT> pbts = new LinkedList<>();
+    private static LinkedList<PCB> PCBS = new LinkedList<>();
 
     private static Scanner sc = new Scanner(System.in);
 
     public FCFSGUI gui;
 
-    public void init(int number,LinkedList<PBT> inputQueue) {
+    public void init(int number,LinkedList<PCB> inputQueue) {
 //        System.out.println("=================FCFS 先来先服务模拟===============");
 //        System.out.println("请输入作业数:");
 //        processNum = sc.nextInt();
 //
 //        System.out.println("请依次输入作业标识符,作业到达时间,作业运行时间:" );
 //        for (int i = 0; i < processNum; i++) {
-//            pbts.add(new PBT(sc.next(), sc.nextDouble(), sc.nextDouble(), 0, 0));
+//            PCBS.add(new PCB(sc.next(), sc.nextDouble(), sc.nextDouble(), 0, 0));
 //        }
         processNum = number;
-        pbts = inputQueue;
-        pbts.sort(Comparator.comparingDouble(PBT::getArriveTime));
+        PCBS = inputQueue;
+        PCBS.sort(Comparator.comparingDouble(PCB::getArriveTime));
         avgTotalTurnTime = 0;
     }
 
@@ -39,14 +39,14 @@ public class FCFS {
         //init();
         double preFinishedTime = 0;
 
-        if (pbts.get(0).getArriveTime() != preFinishedTime) {
-            preFinishedTime = pbts.get(0).getArriveTime();
+        if (PCBS.get(0).getArriveTime() != preFinishedTime) {
+            preFinishedTime = PCBS.get(0).getArriveTime();
         }
 
-        for (PBT pbt : pbts) {
-            pbt.setFinishedTime(preFinishedTime + pbt.getServiceTime());
-            preFinishedTime = pbt.getFinishedTime();
-            pbt.setTurnTime(pbt.getFinishedTime() - pbt.getArriveTime());
+        for (PCB PCB : PCBS) {
+            PCB.setFinishedTime(preFinishedTime + PCB.getServiceTime());
+            preFinishedTime = PCB.getFinishedTime();
+            PCB.setTurnTime(PCB.getFinishedTime() - PCB.getArriveTime());
         }   
         show();
     }
@@ -54,10 +54,10 @@ public class FCFS {
     public void show() {
         gui.showOnUI("================================FCFS======================================");
         gui.showOnUI("Work ID\t\tArrival Time\t\tFinished Time\t\tTurn Time");
-        for (PBT pbt : pbts) {
-            avgTotalTurnTime += pbt.getTurnTime();
-            gui.showOnUI("\t"+pbt.getName()+"\t"+pbt.getArriveTime()+"\t"+
-                    pbt.getFinishedTime()+"\t"+pbt.getTurnTime());
+        for (PCB PCB : PCBS) {
+            avgTotalTurnTime += PCB.getTurnTime();
+            gui.showOnUI("\t"+ PCB.getName()+"\t"+ PCB.getArriveTime()+"\t"+
+                    PCB.getFinishedTime()+"\t"+ PCB.getTurnTime());
         }
         avgTotalTurnTime /= processNum;
         gui.showOnUI("=============================Avg TurnTime:" + avgTotalTurnTime + "===========================");

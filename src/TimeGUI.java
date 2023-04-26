@@ -15,7 +15,7 @@ public class TimeGUI extends Frame implements ActionListener {
 
     private ArrayList<String> results = new ArrayList<String>();
 
-    private LinkedList<PBT> inputs = new LinkedList<PBT>();
+    private LinkedList<PCB> inputs = new LinkedList<PCB>();
 
 
     private int page = 0;
@@ -146,9 +146,9 @@ public class TimeGUI extends Frame implements ActionListener {
                 showOnUI("接受到指定作业：作业标识符："+idField.getText()+" ，作业到达时间："+arrivalTimeField.getText()+" ，作业持续时间："+executionTimeField.getText()+" ，作业优先级："+levelField.getText());
                 finalInput = finalInput + result;
                 if(Double.parseDouble(arrivalTime) == 0){
-                    inputs.add(new PBT(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime),Integer.parseInt(level),'R'));
+                    inputs.add(new PCB(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime),Integer.parseInt(level),'R'));
                 }else{
-                    inputs.add(new PBT(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime),Integer.parseInt(level),'W'));
+                    inputs.add(new PCB(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime),Integer.parseInt(level),'W'));
                 }
                 jobCount--;
             }

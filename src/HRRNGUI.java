@@ -7,7 +7,7 @@ public class HRRNGUI extends Frame implements ActionListener {
     private Button confirmButton, submitButton;
     private TextArea resultArea;
     private int jobCount,jobcount1;
-    private LinkedList<PBT> inputs = new LinkedList<PBT>();
+    private LinkedList<PCB> inputs = new LinkedList<PCB>();
 
     private HRRN control;
     private String finalInput = "";
@@ -104,7 +104,7 @@ public class HRRNGUI extends Frame implements ActionListener {
             String result = id + " " + arrivalTime + " " + executionTime + " ";
             if( jobCount > 0 ){
                 showOnUI("接受到指定作业：作业标识符："+idField.getText()+" ，作业到达时间："+arrivalTimeField.getText()+" ，作业持续时间："+executionTimeField.getText());
-                inputs.add(new PBT(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime),0,0));
+                inputs.add(new PCB(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime),0,0));
                 finalInput = finalInput + result;
                 jobCount--;
             }

@@ -1,12 +1,15 @@
 import java.util.*;
 
-//@SuppressWarnings({"all"})
+/**
+ * 多级队列反馈
+ */
+@SuppressWarnings({"all"})
 public class MSFQSBasedOnTimeSlice {
 
-    private static Queue<PBT> firstQueue = new LinkedList<>();
-    private static Queue<PBT> secondQueue = new LinkedList<>();
-    private static Queue<PBT> thirdQueue = new LinkedList<>();
-    private static LinkedList<PBT> pbts = new LinkedList<>();
+    private static Queue<PCB> firstQueue = new LinkedList<>();
+    private static Queue<PCB> secondQueue = new LinkedList<>();
+    private static Queue<PCB> thirdQueue = new LinkedList<>();
+    private static LinkedList<PCB> PCBS = new LinkedList<>();
     private static int currentTime = 0;
     private static int firstTime;  //第一队列cpu时间片
     private static int secondTime; //第二队列cpu时间片
@@ -18,25 +21,13 @@ public class MSFQSBasedOnTimeSlice {
 
     private String temp = "";
 
-    public void init(int f,int s,int t,int number,LinkedList<PBT> inputs) {
-//        System.out.println("=================MSFQ 多级队列反馈调度模拟===============");
-//        System.out.println("队列数为3，按队列优先级从高到低的顺序输入各个队列的时间片长度：");
-//        firstTime = sc.nextInt();
-//        secondTime = sc.nextInt();
-//        thirdTime = sc.nextInt();
-//        System.out.println( "请输入进程数:" );
-//        processNum = sc.nextInt();
-//
-//        System.out.println("请依次输入进程标识符,进程到达时间,进程运行时间:" );
-//        for (int i = 0; i < processNum; i++) {
-//            pbts.add(new PBT(sc.next(), sc.nextDouble(), sc.nextDouble()));
-//        }
+    public void init(int f,int s,int t,int number,LinkedList<PCB> inputs) {
         firstTime = f;
         secondTime = s;
         thirdTime = t;
         processNum = number;
-        pbts = inputs;
-        pbts.sort(Comparator.comparingDouble(PBT::getArriveTime));
+        PCBS = inputs;
+        PCBS.sort(Comparator.comparingDouble(PCB::getArriveTime));
     }
 
     public void doMSFQ() {
@@ -52,8 +43,8 @@ public class MSFQSBasedOnTimeSlice {
         while (num < processNum || !firstQueue.isEmpty() || !secondQueue.isEmpty() || !thirdQueue.isEmpty()) {
 
             //添加到达的进程至第一队列
-            while(num < processNum && pbts.get(num).getArriveTime() == currentTime) {
-                firstQueue.offer(pbts.get(num++));
+            while(num < processNum && PCBS.get(num).getArriveTime() == currentTime) {
+                firstQueue.offer(PCBS.get(num++));
             }
 
 
@@ -67,7 +58,7 @@ public class MSFQSBasedOnTimeSlice {
                     thirdQueue.peek().setStatus('R');
                 }
                 //运行时间+1
-                PBT peek = firstQueue.peek();
+                PCB peek = firstQueue.peek();
                 peek.setRunningTime(peek.getRunningTime() + 1);
                 //CPU剩余时间片-1
                 firstTime -= 1;
@@ -98,7 +89,7 @@ public class MSFQSBasedOnTimeSlice {
                     thirdQueue.peek().setStatus('R');
                 }
                 //运行时间+1
-                PBT peek = secondQueue.peek();
+                PCB peek = secondQueue.peek();
                 peek.setRunningTime(peek.getRunningTime() + 1);
                 //CPU剩余时间片-1
                 secondTime -= 1;
@@ -125,7 +116,7 @@ public class MSFQSBasedOnTimeSlice {
                 }
             } else if(!thirdQueue.isEmpty()){
                 //运行时间+1
-                PBT peek = thirdQueue.peek();
+                PCB peek = thirdQueue.peek();
                 peek.setRunningTime(peek.getRunningTime() + 1);
                 //CPU剩余时间片-1
                 thirdTime -= 1;
@@ -158,26 +149,26 @@ public class MSFQSBasedOnTimeSlice {
         temp = connectString(temp,"================================Current time: "+currentTime+ "================================");
         temp = connectString(temp,"================================First Queue======================================");
         temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
-        for (PBT pbt : firstQueue) {
-            temp = connectString(temp, pbt.getName()+"\t"+pbt.getPriority()+"\t"+
-                    pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
-                    (pbt.getStatus() == 'R' ? "Ready" : "Running"));
+        for (PCB PCB : firstQueue) {
+            temp = connectString(temp, PCB.getName()+"\t"+ PCB.getPriority()+"\t"+
+                    PCB.getArriveTime()+"\t"+ PCB.getServiceTime()+"\t"+ PCB.getRunningTime()+"\t"+
+                    (PCB.getStatus() == 'R' ? "Ready" : "Running"));
         }
 
         temp = connectString(temp,"================================Second Queue======================================");
         temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
-        for (PBT pbt : secondQueue) {
-            temp = connectString(temp,pbt.getName()+"\t"+pbt.getPriority()+"\t"+
-                    pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
-                    (pbt.getStatus() == 'R' ? "Ready" : "Running"));
+        for (PCB PCB : secondQueue) {
+            temp = connectString(temp, PCB.getName()+"\t"+ PCB.getPriority()+"\t"+
+                    PCB.getArriveTime()+"\t"+ PCB.getServiceTime()+"\t"+ PCB.getRunningTime()+"\t"+
+                    (PCB.getStatus() == 'R' ? "Ready" : "Running"));
         }
 
         temp = connectString(temp,"================================Third Queue======================================");
         temp = connectString(temp,"Process ID\tPriority\tArrival Time\tService Time\tRun Time\tStatus");
-        for (PBT pbt : thirdQueue) {
-            temp = connectString(temp,pbt.getName()+"\t"+pbt.getPriority()+"\t"+
-                    pbt.getArriveTime()+"\t"+pbt.getServiceTime()+"\t"+pbt.getRunningTime()+"\t"+
-                    (pbt.getStatus() == 'R' ? "Ready" : "Running"));
+        for (PCB PCB : thirdQueue) {
+            temp = connectString(temp, PCB.getName()+"\t"+ PCB.getPriority()+"\t"+
+                    PCB.getArriveTime()+"\t"+ PCB.getServiceTime()+"\t"+ PCB.getRunningTime()+"\t"+
+                    (PCB.getStatus() == 'R' ? "Ready" : "Running"));
         }
         temp = connectString(temp,"\n");
 

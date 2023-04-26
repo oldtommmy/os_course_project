@@ -15,7 +15,7 @@ public class MSFQGUI extends Frame implements ActionListener {
 
     private ArrayList<String> results = new ArrayList<String>();
 
-    private LinkedList<PBT> inputs = new LinkedList<PBT>();
+    private LinkedList<PCB> inputs = new LinkedList<PCB>();
 
 
     private int page = 0;
@@ -157,7 +157,7 @@ public class MSFQGUI extends Frame implements ActionListener {
             if( jobCount > 0 ){
                 showOnUI("接受到指定作业：作业标识符："+idField.getText()+" ，作业到达时间："+arrivalTimeField.getText()+" ，作业持续时间："+executionTimeField.getText());
                 finalInput = finalInput + result;
-                inputs.add(new PBT(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime)));
+                inputs.add(new PCB(id,Double.parseDouble(arrivalTime),Double.parseDouble(executionTime)));
                 jobCount--;
             }
             if (jobCount == 0) {
